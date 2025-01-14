@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { CloudUpload, Info } from "lucide-react";
 
-export default function App() {
+export default function Formulaire() {
   const [photo, setPhoto] = useState<File | null>(null);
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");

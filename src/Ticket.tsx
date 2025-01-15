@@ -1,9 +1,9 @@
 import { Github } from "lucide-react";
+import { useUserContext } from "./hook/useContext";
 
 export default function Ticket() {
-  // Données dynamiques
-  const userName = "Jonatan Kristof";
-  const userEmail = "jonatan@email.com";
+  const { userData } = useUserContext();
+  console.log(userData);
 
   return (
     <main className="flex flex-col text-white justify-center items-center h-screen text-sm text-center p-4">
@@ -15,12 +15,17 @@ export default function Ticket() {
         />
       </a>
       <h1 className="text-4xl font-bold">
-        Congrats, {userName}!
+        Congrats,
+        <span className="bg-gradient-to-r from-red-500   to-white bg-clip-text text-transparent">
+          {userData.fullName}
+        </span>
+        !
         <br /> Your ticket is ready.
       </h1>
+
       <p className="mt-5">
         We've emailed your ticket to
-        <br /> {userEmail} and will send updates in
+        <br /> {userData.email} and will send updates in
         <br /> the run-up to the event.
       </p>
 
@@ -36,21 +41,23 @@ export default function Ticket() {
             <img
               src="/images/logo-full.svg"
               alt="logo coding conf"
-              className="text-3xl font-bold"
+              className="text-3xl font-bold "
             />
-            <p className="ml-12">Jan 31, 2025 / Austin, TX</p>
-            <div className="flex  my-5 items-center">
+            <p className="ml-12 mt-2 text-slate-400">
+              Jan 31, 2025 / Austin, TX
+            </p>
+            <div className="flex    items-start my-5  ">
               <img
                 src="/images/image-avatar.jpg"
                 alt="Uploaded Avatar"
-                className="  w-16 h-16 mx-auto object-cover rounded-md"
+                className="  w-16 h-16 object-cover rounded-md"
               />
 
-              <div className="flex flex-col ml-2">
-                <h2 className="text-xl  ">{userName}</h2>
+              <div className="flex flex-col ml-4 ">
+                <h2 className="text-xl text-left  ">{userData.fullName}</h2>
                 <div className="flex ">
                   <Github className="text-md" />
-                  <p className="text-lg">@jonatankris</p>
+                  <p className="text-lg">{userData.github}</p>
                 </div>
               </div>
             </div>

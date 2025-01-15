@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import { CloudUpload, Info } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useUserContext } from "./hook/useContext";
 
 export default function Formulaire() {
+  const { setUserData } = useUserContext();
+  const navigate = useNavigate();
+
   const [photo, setPhoto] = useState<File | null>(null);
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -14,20 +19,58 @@ export default function Formulaire() {
     photo: "",
   });
 
-  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       if (!["image/jpeg", "image/png"].includes(file.type)) {
         setPhotoError("Invalid file type. Please upload a JPG or PNG file.");
-      } else if (file.size > 500000) {
-        setPhotoError(
-          "File size is too large. Please upload a file under 500KB."
-        );
       } else {
-        setPhotoError("");
-        setPhoto(file);
+        // Redimensionner et compresser l'image
+        const resizedFile = await compressImage(file);
+        if (resizedFile.size > 500000) {
+          setPhotoError("File size is too large after compression.");
+        } else {
+          setPhotoError("");
+          setPhoto(resizedFile);
+        }
       }
     }
+  };
+
+  // Fonction pour compresser l'image
+  const compressImage = (file: File): Promise<File> => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target?.result as string;
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+          const maxWidth = 800;
+          const scaleSize = maxWidth / img.width;
+          canvas.width = maxWidth;
+          canvas.height = img.height * scaleSize;
+
+          ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+          canvas.toBlob(
+            (blob) => {
+              if (blob) {
+                const resizedFile = new File([blob], file.name, {
+                  type: file.type,
+                  lastModified: Date.now(),
+                });
+                resolve(resizedFile);
+              }
+            },
+            file.type,
+            0.7
+          ); // Qualité 70%
+        };
+      };
+    });
   };
 
   const removePhoto = () => {
@@ -74,6 +117,8 @@ export default function Formulaire() {
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validateForm()) {
+      setUserData({ fullName, email, github, photo });
+      navigate("/ticket");
       console.log({ fullName, email, github, photo });
       alert("Form submitted successfully!");
     }
@@ -153,10 +198,17 @@ export default function Formulaire() {
                 className="hidden"
               />
             </div>
-            {formErrors.photo && (
+            {formErrors.photo ? (
               <div className="flex items-center mt-1">
                 <Info className="w-4 text-red-500" />
                 <p className="ml-1 text-xs text-red-500">{formErrors.photo}</p>
+              </div>
+            ) : (
+              <div className="flex items-center mt-1">
+                <Info className="w-4  " />
+                <p className="ml-1 text-xs  ">
+                  Upload your photo (JPG or PNG, max size: 500KB).{" "}
+                </p>
               </div>
             )}
           </div>

@@ -3,6 +3,7 @@ import { useUserContext } from "./hook/useContext";
 
 export default function Ticket() {
   const { userData } = useUserContext();
+  const photoURL = userData.photo ? URL.createObjectURL(userData.photo) : null;
   console.log(userData);
 
   return (
@@ -16,7 +17,7 @@ export default function Ticket() {
       </a>
       <h1 className="text-4xl font-bold">
         Congrats,
-        <span className="bg-gradient-to-r from-red-500   to-white bg-clip-text text-transparent">
+        <span className="bg-gradient-to-r from-red-500 to-white bg-clip-text text-transparent">
           {userData.fullName}
         </span>
         !
@@ -29,8 +30,7 @@ export default function Ticket() {
         <br /> the run-up to the event.
       </p>
 
-      <div className="flex items-center  mt-8 ">
-        {/* Conteneur pour l'image avec texte superposé */}
+      <div className="flex items-center mt-8">
         <div className="relative w-96">
           <img
             src="/images/pattern-ticket.svg"
@@ -41,23 +41,36 @@ export default function Ticket() {
             <img
               src="/images/logo-full.svg"
               alt="logo coding conf"
-              className="text-3xl font-bold "
+              className="text-3xl font-bold"
             />
-            <p className="ml-12 mt-2 text-slate-400">
+            <p className=" ml-8 mt-2 text-slate-400">
               Jan 31, 2025 / Austin, TX
             </p>
-            <div className="flex    items-start my-5  ">
-              <img
-                src="/images/image-avatar.jpg"
-                alt="Uploaded Avatar"
-                className="  w-16 h-16 object-cover rounded-md"
-              />
+            <div className="flex items-start my-5">
+              {photoURL ? (
+                <img
+                  src={photoURL}
+                  alt="User Avatar"
+                  className="w-16 h-16 object-cover rounded-md"
+                />
+              ) : (
+                <img
+                  src="/images/image-avatar.jpg"
+                  alt="Uploaded Avatar"
+                  className="w-16 h-16 object-cover rounded-md"
+                />
+              )}
 
-              <div className="flex flex-col ml-4 ">
-                <h2 className="text-xl text-left  ">{userData.fullName}</h2>
-                <div className="flex ">
-                  <Github className="text-md" />
-                  <p className="text-lg">{userData.github}</p>
+              <div className="flex flex-col ml-2">
+                <h2 className="text-xl text-left w-40 truncate">
+                  {userData.fullName}
+                </h2>
+                <div className="flex items-center">
+                  <Github className="w-5" />
+
+                  <p className="text-base ml-1 text-slate-400   truncate">
+                    {userData.github}
+                  </p>
                 </div>
               </div>
             </div>

@@ -11,8 +11,8 @@ app.get("/", (req, res) => {
   res.status(200).send("Hello tu es le meilleur ");
 });
 app.post("/", (req, res) => {
-  const { fullName, email, githubUserName } = req.body;
-  res.status(200).send({ fullName, email, githubUserName });
+  const { fullName, email, githubUserName, img } = req.body;
+  res.status(200).send({ fullName, email, githubUserName, img });
 });
 
 app.listen(port, () => {

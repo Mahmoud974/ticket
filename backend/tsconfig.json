@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ESNext", // Compatible avec Node.js 14 ou supérieur
+    "module": "commonjs", // Utilisation de CommonJS (nécessaire pour Lambda)
+    "moduleResolution": "node", // Résolution des modules comme en Node.js
+    "esModuleInterop": true, // Pour permettre d'utiliser 'import' / 'require' ensemble
+    "skipLibCheck": true, // Ignorer la vérification des types dans les fichiers de bibliothèque
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./dist", // Dossier de sortie pour la compilation
+    "strict": true, // Pour une vérification stricte des types
+    "resolveJsonModule": true, // Si vous avez besoin de charger des fichiers JSON
+    "declaration": true, // Générer des fichiers de déclaration pour les types (optionnel)
+    "declarationMap": true // Générer des fichiers de carte pour les déclarations (optionnel)
+  },
+  "include": ["src/**/*"], // Inclure tous les fichiers TypeScript dans src
+  "exclude": ["node_modules"] // Exclure les fichiers dans node_modules
+}
